@@ -38,32 +38,34 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    
 public:
     solution() {
         /*some_precomputation*/
     }
 
+    int max_prefix_subsequence(string const& S, string const& rev_S) {
+        int at = 0;
+        for (auto const& c : S) {
+            at += (rev_S[at] == c);
+        }
+        return at;
+    }
+
     void solve() {
-        cin >> D;
-        
+        string S;
+        cin >> S;
 
 //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
-        } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
-        }
-
+        string rev_S = S;
+        reverse(rev_S.begin(), rev_S.end());
+        cout << S.size() - max_prefix_subsequence(S, rev_S) << endl;
     }
 
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
             solve();
         }

@@ -38,43 +38,97 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    int N;
+    int K;
+    int S;
+    int LOG;
+    vector<vector<int>> up;
 public:
     solution() {
         /*some_precomputation*/
     }
 
+    void binary_lifting() {
+        for (int j { 1 }; j < LOG; ++j) {
+            for (int i { 0 }; i < N; ++i) {
+                up[i][j] = up[up[i][j - 1]][j - 1];
+            }
+        }
+    }
+
     void solve() {
-        cin >> D;
+        cin >> N >> K >> S;
+        my::vector<int> A;
+        A.push_input(N);
+
+        //# </DON'T PANIC RELAX>
+
+        LOG = 0;
+        while ((1 << LOG) <= K) LOG++;
+
+        up = vector<vector<int>>(N + 1, vector<int>(LOG));
+        vector<int64_t> prefix_sum;
+        for (int64_t i { 0 }, s { 0 }; i < N; ++i) {
+            s += A[i];
+            prefix_sum.push_back(s);
+        }
+
+        up[N] = vector<int>(LOG, N);
+        for (int i { 0 }; i < N; ++i) {
+            int64_t next_segment { prefix_sum[i] - A[i] + S };
+            auto it = std::upper_bound(
+                prefix_sum.begin(),
+                prefix_sum.end(),
+                next_segment
+            );
+            int at = std::distance(prefix_sum.begin(), it);
+            up[i][0] = at;
+        }
         
 
-//# </DON'T PANIC RELAX>
+        binary_lifting();
+        auto jump = [&](int at) -> int {
+            for (int i { 0 }; i < 30; ++i) {
+                if (K & (1 << i)) {
+                    at = up[at][i];
+                }
+            }
+            return at;
+        };
 
-        if (D & 1) {
-            cout << -1 << endl;
-        } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
+        int ans { 0 };
+        for (int i { 0 }; i < N; ++i) {
+            ans = max(ans, jump(i) - i);
         }
+        cout << ans << nl;
 
     }
 
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
+#ifdef DEBUG
+            clock_t begin, end;
+            double time_spent;
+            begin = clock();
+#endif
             solve();
+#ifdef DEBUG
+            end = clock();
+            time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+            cout << "\nTime Taken :" <<  time_spent << nl << nl;
+#endif // DEBUG
         }
     }
+
 };
 
 
 int main() {
     ios::sync_with_stdio(0);
-    cin.tie(NULL);
-    cout.tie(NULL);
     solution()();
     return 0;
 }
+
+

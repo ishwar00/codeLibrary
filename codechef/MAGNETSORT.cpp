@@ -1,16 +1,8 @@
-/*
- *
- * problem link: https://www.codechef.com/LTIME105B/problems/MAGNETSORT
- *
- *
- * */
-
-
 # include <bits/stdc++.h>
 using namespace std;
 namespace my {
-    template < typename T > class vector : public std::vector<T> {    public:
-        vector()                            { }
+    template < typename T > class vector : public std::vector<T> {    public:    
+        vector()                            { }    
         vector(int n)                       {    this->reserve(n); }
         vector(std::initializer_list<T> ls) {    for (auto i : ls)	this->push_back(i); }
         void push_input(size_t n)           {    for (size_t i { 0ULL }; i != n; ++i) {    T store;	cin >> store;    this->push_back(store);    }}
@@ -39,7 +31,7 @@ const std::string  sp  { " " };
 const std::string  nl  { "\n" };
 #define sec second
 #define fir first
-/*******************************************************</Utilities>********************************************************/
+/*******************************************************</Utilities>********************************************************/         
 
 
 
@@ -52,7 +44,7 @@ public:
         /*some_precomputation*/
     }
 
-
+    
     void solve() {
         my::vector<int> A;
         string S;
@@ -63,7 +55,7 @@ public:
 //# </DON'T PANIC RELAX>
 
 
-        if (std::is_sorted(A.begin(), A.end())) {
+        if (std::is_sorted(A.begin(), A.end())) { 
             cout << 0 << nl;
         } else {
 
@@ -83,7 +75,7 @@ public:
                     break;
                 }
             }
-
+            
             int j = N - 1;
             for (; j >= 0; j = j - 1) {
                 if (A[j] == sorted_A[j]) {
@@ -102,7 +94,7 @@ public:
                 if (S[i] == 'N') {
                     if (block_A.first > 0 or block_C.first > 0) {
                         return (void)(cout << 1 << endl);
-                    }
+                    } 
                 } else {
                     if (block_A.second > 0 or block_C.second > 0) {
                         return (void)(cout << 1 << endl);

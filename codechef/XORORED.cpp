@@ -38,43 +38,66 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    int N;
 public:
     solution() {
         /*some_precomputation*/
     }
 
     void solve() {
-        cin >> D;
-        
+        cin >> N;
+        my::vector<int> A;
+        A.push_input(N);
 
 //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
-        } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
+        vector<int> count(31);
+        for (auto a : A) {
+            for (int i { 0 }; i < 31; ++i) {
+                if (a & (1 << i)) {
+                    count[i]++;
+                }
+            }
         }
+
+        int X { 0 };
+        int xorored { 0 };
+        for (int i { 0 }; i < 31; ++i) {
+            if (count[i] > 0) {
+                if (count[i] != N) {
+                    xorored |= (1 << i);
+                } else {
+                    X |= (1 << i);
+                }
+            }
+        }
+        cout << X << sp << xorored << nl;
 
     }
 
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
+#ifdef DEBUG
+            clock_t begin, end;
+            double time_spent;
+            begin = clock();
+#endif
             solve();
+#ifdef DEBUG
+            end = clock();
+            time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+            cout << "\nTime Taken :" <<  time_spent << nl << nl;
+#endif // DEBUG
         }
     }
+
 };
 
 
 int main() {
     ios::sync_with_stdio(0);
-    cin.tie(NULL);
-    cout.tie(NULL);
     solution()();
     return 0;
 }

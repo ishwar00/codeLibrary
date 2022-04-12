@@ -38,43 +38,86 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    int N;
+    int M;
 public:
     solution() {
         /*some_precomputation*/
     }
 
     void solve() {
-        cin >> D;
-        
+        cin >> N >> M;
+        vector<vector<int>> graph(N + 1);
+        for (int i { 0 }, x { 0 }, y { 0 }; i < M; ++i) {
+            cin >> x >> y;
+            graph[x].push_back(y);
+            graph[y].push_back(x);
+        }
+
 
 //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
-        } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
+        multiset<pair<int, int>> Set;
+        vector<int> count(N + 1);
+
+        int maxDi { 0 };
+        for (int i { 1 }; i <= N; ++i) {
+            Set.insert({ graph[i].size(), i });
+            count[i] = graph[i].size();
         }
+
+        vector<int> ans(N);
+
+        while (Set.empty() != true) {
+            auto it { Set.begin() };
+            auto [_, v] { *it };
+            Set.erase(it);
+            ans[v - 1] = N;
+            N = N - 1;
+            int D { 0 };
+            for (const int& a : graph[v]) {
+                auto it { Set.find({count[a], a}) };
+                if (it != Set.end()) {
+                    D = D + 1;
+                    Set.erase(it);
+                    count[a] = count[a] - 1;
+                    Set.insert({ count[a], a });
+                }
+            }
+            maxDi = max(maxDi, D);
+        }
+
+        cout << maxDi << nl;
+        print(ans);
+
+        
+
 
     }
 
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
+#ifdef DEBUG
+            clock_t begin, end;
+            double time_spent;
+            begin = clock();
+#endif
             solve();
+#ifdef DEBUG
+            end = clock();
+            time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+            cout << "\nTime Taken :" <<  time_spent << nl << nl;
+#endif // DEBUG
         }
     }
+
 };
 
 
 int main() {
     ios::sync_with_stdio(0);
-    cin.tie(NULL);
-    cout.tie(NULL);
     solution()();
     return 0;
 }

@@ -38,32 +38,51 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    int N;
+    set<int> S;
+    vector<vector<int>> graph;
 public:
     solution() {
         /*some_precomputation*/
     }
 
+    int DFS(int const at, int const parent, vector<int> const& A) {
+        bool marked = S.find(A[at]) != S.end() ;
+        if(marked) S.erase(A[at]);
+        int store = *S.begin();
+        for (int const child : graph[at]) {
+            if (child != parent) {
+                store = max(store, DFS(child, at, A));
+            }
+        }
+        if(marked)  S.insert(A[at]);
+        return store;
+    }
+    
     void solve() {
-        cin >> D;
-        
+        my::vector<int> A { 0 };
+        cin >> N;
+        A.push_input(N);
+        graph = vector<vector<int>>(N + 1);
+        S = set<int>();
+        S.insert(0);
+        for (int i = 1, x = 0, y = 0; i < N; ++i) {
+            cin >> x >> y;
+            graph[x].push_back(y);
+            graph[y].push_back(x);
+            S.insert(i);
+        }
+        S.insert(N);
 
 //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
-        } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
-        }
+        cout << DFS(1, -1, A) << endl;
 
     }
 
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
             solve();
         }

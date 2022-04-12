@@ -32,38 +32,39 @@ const std::string  nl  { "\n" };
 #define sec second
 #define fir first
 /*******************************************************</Utilities>********************************************************/         
-
+#include<bit>
 
 
 
 class solution {
     int T = 1;
-    int D;
+    int64_t X;
+    int64_t M;
 public:
     solution() {
         /*some_precomputation*/
     }
 
     void solve() {
-        cin >> D;
-        
+        cin >> X >> M;
 
-//# </DON'T PANIC RELAX>
+        //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
+        int64_t ops = 0;
+        for (int64_t store = X; store > 0 and ops < M; ops++) {
+            store = store >> 1;
+        }
+        ops = ops - 1;
+        if (M > ops + 1) {
+            cout << 1LL + M - (ops + 1LL + ((1ULL << ops) != X)) << nl;
         } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
+            cout << ((1ULL << ops) == X ? 1LL : 0LL) << nl;
         }
 
     }
-
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
             solve();
         }

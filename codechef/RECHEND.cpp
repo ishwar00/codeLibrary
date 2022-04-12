@@ -38,43 +38,84 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    int N;
 public:
     solution() {
         /*some_precomputation*/
     }
 
     void solve() {
-        cin >> D;
-        
+        my::vector<pair<int, int>> B;
+        cin >> N;
+        B.push_input(N);
 
-//# </DON'T PANIC RELAX>
+        //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
-        } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
+        sort(B.begin(), B.end(), [](auto a, auto b) { return a.second < b.second; });
+
+        auto F = [&](int at) -> int {
+            auto [R, C] { B[at] };
+            R = R - 1;
+            C = C + 1;
+            int length { 1 };
+            while (R > 0 and R <= N and C > 0 and C <= N) {
+                at = at + 1;
+
+                assert(at != N);
+                if (B[at] != pair<int, int>{ R, C }) {
+                    return length;
+                } else {    
+                    length = length + 1;
+                }
+                R = R - 1;
+                C = C + 1;
+            }
+            return length;
+        };
+
+        for (int i { 0 }; i < N; ++i) {
+            auto [R, C] { B[i] };
+            if (C == 1) {
+                dbg(i)
+                if (F(i) == R) {
+                    return void(cout << "NO" << nl);
+                }
+            } else if (R == N) {
+                dbg(i);
+                if (F(i) == N - C + 1) {
+                    return void(cout << "NO" << nl);
+                }
+            }
         }
+        cout << "YES" << nl;
+
+
 
     }
 
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
+#ifdef DEBUG
+            clock_t begin, end;
+            double time_spent;
+            begin = clock();
+#endif
             solve();
+#ifdef DEBUG
+            end = clock();
+            time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+            cout << "\nTime Taken :" <<  time_spent << nl << nl;
+#endif // DEBUG
         }
     }
+
 };
 
 
 int main() {
     ios::sync_with_stdio(0);
-    cin.tie(NULL);
-    cout.tie(NULL);
     solution()();
     return 0;
 }

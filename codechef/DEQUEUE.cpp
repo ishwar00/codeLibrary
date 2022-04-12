@@ -21,7 +21,6 @@ typename enable_if<is_same<Ostream, ostream>::value, Ostream&>::type operator<<(
     for (auto& x : v) { os << x << ", "; }
     return os << "]";
 }
-template<typename T1, typename T2>           std::istream& operator>> (std::istream& in, pair<T1, T2>& P)      {    in >> P.first >> P.second;  return in;  }
 template<typename Ostream, typename ...Ts>   Ostream&      operator<<(Ostream& os, const pair<Ts...>& p)       {    return os << "{" << p.first << ", " << p.second << "}";                }
 template < typename T >                      inline bool   compare_float(T a, T b)                             {    return (abs(a - b) < 1e-9) ? true : false;                                   }
 template < typename T >                      istream&      operator>>(istream& os, vector<T>& v)               {    T store;    os >> store;    v.push_back(store);    return os;                }
@@ -38,43 +37,74 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    int N;
+    int M;
 public:
     solution() {
         /*some_precomputation*/
     }
 
+	
+
+    
     void solve() {
-        cin >> D;
-        
+        cin >> N >> M;
+        my::vector<int> Q;
+        Q.push_input(M);
 
-//# </DON'T PANIC RELAX>
+        //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
-        } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
-        }
-
-    }
+        vector<int> mp(N + 1);
+		pair<int, int> window;
+		int picked_count { 0 };
+		for (int i { 0 }; i != M and picked_count != N; ++i) {
+			picked_count += not(mp[Q[i]]);
+			mp[Q[i]]++;
+			window.sec = i;
+		}
+		int ans { window.sec + 1 };
+		int final_ans { ans };
+		for (int i { window.sec }, j { 0 }; i >= 0; i = i - 1) {
+			mp[Q[i]] = mp[Q[i]] - 1;
+			ans = ans - 1;
+			if (mp[Q[i]] == 0) {
+				picked_count = picked_count - 1;
+				while (picked_count != N) {
+					j = j - 1;
+					mp[Q[j + M]]++;
+					ans++;
+					picked_count += (mp[Q[j + M]] == 1);
+				}
+			}
+			final_ans = min(ans, final_ans);
+		}
+		cout << final_ans << nl;
+		
+	}
 
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
+#ifdef DEBUG
+            clock_t begin, end;
+            double time_spent;
+            begin = clock();
+#endif
             solve();
+#ifdef DEBUG
+            end = clock();
+            time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+            cout << "\nTime Taken :" <<  time_spent << nl << nl;
+#endif // DEBUG
         }
     }
+
 };
 
 
 int main() {
     ios::sync_with_stdio(0);
-    cin.tie(NULL);
-    cout.tie(NULL);
     solution()();
     return 0;
 }

@@ -38,32 +38,104 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    int N;
 public:
     solution() {
         /*some_precomputation*/
     }
+    
+
+    bool proceed(vector<int> const& A) {
+        for (int const& i : A) {
+            if (i & 1) { return true; }
+        }
+        return false;
+    }
+
+    pair<int, int> changing_cost(vector<int> const& A, bool begin) {
+        int cost = 0;
+        int at = -1;
+        for (int i = 0; i < A.size(); ++i) {
+            int const& a = A[i];
+            if ((a & 1) != begin) {
+                cost = cost + 1;
+            } else if (begin == 1) {
+                at = i;
+            }
+            begin = !begin;
+        }
+        return { cost, at };
+    }
 
     void solve() {
-        cin >> D;
-        
+        my::vector<int> A;
+        cin >> N;
+        A.push_input(N);   
 
 //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
+
+        if (proceed(A)) {
+            auto begin_one = changing_cost(A, 1);
+            auto begin_zero = changing_cost(A, 0);
+
+            bool begin_with;
+            pair<int, int> begin;
+            if (begin_zero < begin_one) {
+                begin = begin_zero;
+                begin_with = 0;
+            } else if (begin_zero > begin_one) {
+                begin = begin_one;
+                begin_with = 1;
+            } else {
+                begin = begin_zero.second != -1 ? begin_zero : begin_one;
+                if (begin_zero.second != -1) {
+                    begin_with = 0;
+                } else {
+                    begin_with = 1;
+                }
+            }
+
+            bool perfect = true;
+            if (begin.second == -1) {
+                perfect = false;
+                for (int i = 0; i < A.size(); ++i) {
+                    if (A[i] & 1) { begin.second = i; }
+                }
+            }
+            // dbg(perfect);
+            // dbg(begin_with);
+
+            
+            cout << begin.first + !perfect << endl;
+            for (int i = 0; i < N; ++i) {
+                // dbg(i);
+                // dbg((A[i] & 1));
+                // dbg(begin_with);
+                if (i != begin.second and (A[i] & 1) != begin_with) {
+                    
+                    cout << i + 1 << sp << begin.second + 1 << nl;
+                }
+                begin_with = !begin_with;
+
+            }
+
+            if (not perfect) {
+                if (begin.second - 1 >= 0 and (A[begin.second] & 1)) {
+                    cout << begin.second << sp << begin.second + 1 << endl;
+                } else {
+                    cout << begin.second + 1 << sp << begin.second + 2 << endl;
+                }
+            }
         } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
+            cout << -1 << endl;
         }
 
     }
 
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
             solve();
         }

@@ -38,32 +38,58 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    int N;
+    int M;
 public:
     solution() {
         /*some_precomputation*/
     }
 
+
+    int run_dijkstra(vector<vector<pair<int, int>>> const& G) {
+        set<pair<int, int>> S;
+        vector<bool> done(N + 1);
+        vector<int> distance(N + 1, INT32_MAX);
+        distance[1] = 0;
+        S.insert({ 0, 1 });
+        while (S.empty() != true) {
+            auto const [cost, s] = (*S.begin());
+            S.erase(S.begin());
+            done[s] = true;
+            for (auto const& a : G[s]) {
+                int vertex = a.first;
+                int weight = a.second;
+                if (not done[vertex]) {
+                    distance[vertex] = min(distance[vertex], weight + distance[s]);
+                    S.insert({ distance[vertex], vertex });
+                }
+            }
+        }
+        return distance[N];
+    }
+
     void solve() {
-        cin >> D;
-        
+        cin >> N >> M;
+        vector<vector<pair<int, int>>> graph(N + 1);
+        for (int i = 0, u = 0, v = 0; i < M; ++i) {
+            cin >> u >> v;
+            graph[u].push_back({ v, 0 });
+            graph[v].push_back({ u, 0 });
+        }
 
 //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
-        } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
+        for (int i = 1; i < N; ++i) {
+            graph[i].push_back({ i + 1, 1 });
+            graph[i + 1].push_back({ i, 1 });
         }
 
+        cout << run_dijkstra(graph) << nl;
     }
 
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
             solve();
         }

@@ -38,32 +38,48 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    int N;
 public:
     solution() {
         /*some_precomputation*/
     }
 
+    pair<int, int> count_binary(string const& S) {
+        int one = 0;
+        int zero = 0;
+        for (auto const& c : S) {
+            one += (c == '1');
+            zero += (c == '0');
+        }
+        return move(pair<int, int>{ zero, one });
+    }
+
     void solve() {
-        cin >> D;
-        
+        string S;
+        cin >> N >> S;
 
 //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
+        auto const& [zero_count, one_count] = count_binary(S);
+        if (N & 1) {
+            if ((zero_count + one_count) & 1) {
+                cout << "YES" << nl;
+            } else {
+                cout << "NO" << nl;
+            }
         } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
+            if (zero_count == one_count or (not(zero_count & 1) and not(one_count & 1))) {
+                cout << "YES" << nl;
+            } else {
+                cout << "NO" << nl;
+            }
         }
 
     }
 
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
             solve();
         }

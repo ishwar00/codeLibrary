@@ -21,7 +21,6 @@ typename enable_if<is_same<Ostream, ostream>::value, Ostream&>::type operator<<(
     for (auto& x : v) { os << x << ", "; }
     return os << "]";
 }
-template<typename T1, typename T2>           std::istream& operator>> (std::istream& in, pair<T1, T2>& P)      {    in >> P.first >> P.second;  return in;  }
 template<typename Ostream, typename ...Ts>   Ostream&      operator<<(Ostream& os, const pair<Ts...>& p)       {    return os << "{" << p.first << ", " << p.second << "}";                }
 template < typename T >                      inline bool   compare_float(T a, T b)                             {    return (abs(a - b) < 1e-9) ? true : false;                                   }
 template < typename T >                      istream&      operator>>(istream& os, vector<T>& v)               {    T store;    os >> store;    v.push_back(store);    return os;                }
@@ -38,43 +37,66 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    int K;
 public:
     solution() {
         /*some_precomputation*/
     }
 
     void solve() {
-        cin >> D;
-        
+        cin >> K;
+        my::vector<string> S;
+        S.push_input(K);
 
 //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
-        } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
+        for (auto& s : S) {
+            if (s.front() >= 'a' and s.front() <= 'm') {
+                for (auto& c : s) {
+                    if (not(c >= 'a' and c <= 'm')) {
+                        cout << "NO" << nl;
+                        return;
+                    }
+                }
+            } else if (s.front() >= 'M' and s.front() <= 'Z') {
+                for (auto& c : s) {
+                    if (not(c >= 'N' and c <= 'Z')) {
+                        cout << "NO" << nl;
+                        return;
+                    }
+                }
+            } else {
+                cout << "NO" << nl;
+                return;
+            }
         }
+        cout << "YES" << nl;
 
     }
 
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
+#ifdef DEBUG
+            clock_t begin, end;
+            double time_spent;
+            begin = clock();
+#endif
             solve();
+#ifdef DEBUG
+            end = clock();
+            time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+            cout << "\nTime Taken :" <<  time_spent << nl << nl;
+#endif // DEBUG
         }
     }
+
 };
 
 
 int main() {
     ios::sync_with_stdio(0);
-    cin.tie(NULL);
-    cout.tie(NULL);
     solution()();
     return 0;
 }

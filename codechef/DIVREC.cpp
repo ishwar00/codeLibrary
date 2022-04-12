@@ -38,32 +38,44 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    int64_t A;
+    int64_t B;
+    int64_t X;
 public:
     solution() {
         /*some_precomputation*/
     }
 
+
+    int64_t sum_of_divisors(int64_t N) {
+        int64_t sum = 0;
+        for (int64_t i = 1; i * i <= N; ++i) {
+            if (N % i == 0) {
+                int64_t d = N / i;
+                sum += (d + i * (d != i));
+            }
+        }
+        return sum;
+    }
+
     void solve() {
-        cin >> D;
-        
+        cin >> X >> A >> B;
 
 //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
+        int64_t N = X * B / A;
+        assert(N > 0);
+        // assert(A > B);
+        if (X * B % A == 0 and A >= B and X == sum_of_divisors(N)) {
+            cout << N << nl;
         } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
+            cout << -1 << endl;
         }
-
     }
 
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
             solve();
         }

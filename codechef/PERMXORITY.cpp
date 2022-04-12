@@ -38,32 +38,39 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    int N;
 public:
     solution() {
         /*some_precomputation*/
     }
 
     void solve() {
-        cin >> D;
-        
+        cin >> N;
 
-//# </DON'T PANIC RELAX>
+        //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
+        if (N == 2) {
             cout << -1 << endl;
-        } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
+            return;
         }
 
+        
+        if (not (N & 1)) {
+            vector<int> permutation { N, 1 };
+            for (int i = N - 1; i > 1; i = i - 1) {
+                permutation.push_back(i);
+            }
+            print(permutation);
+        } else {
+            vector<int> permutation(N);
+            iota(permutation.begin(), permutation.end(), 1);
+            print(permutation);
+        }
     }
 
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
             solve();
         }

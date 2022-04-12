@@ -21,7 +21,6 @@ typename enable_if<is_same<Ostream, ostream>::value, Ostream&>::type operator<<(
     for (auto& x : v) { os << x << ", "; }
     return os << "]";
 }
-template<typename T1, typename T2>           std::istream& operator>> (std::istream& in, pair<T1, T2>& P)      {    in >> P.first >> P.second;  return in;  }
 template<typename Ostream, typename ...Ts>   Ostream&      operator<<(Ostream& os, const pair<Ts...>& p)       {    return os << "{" << p.first << ", " << p.second << "}";                }
 template < typename T >                      inline bool   compare_float(T a, T b)                             {    return (abs(a - b) < 1e-9) ? true : false;                                   }
 template < typename T >                      istream&      operator>>(istream& os, vector<T>& v)               {    T store;    os >> store;    v.push_back(store);    return os;                }
@@ -38,25 +37,29 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    int64_t N;
+    int64_t M;
+    int64_t Q;
 public:
     solution() {
         /*some_precomputation*/
     }
 
     void solve() {
-        cin >> D;
-        
+        cin >> N >> M;
 
-//# </DON'T PANIC RELAX>
+            //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
-        } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
+        int64_t median { N + 2 + (2 * N - 1) / 2 };
+        int64_t min { N + 2 };
+        int64_t max { 3 * N };
+        for (int i { 0 }; i < M; ++i) {
+            cin >> Q;
+            if (Q >= min and Q <= max) {
+                cout << N - abs(median - Q) << nl;
+            } else {
+                cout << 0 << nl;
+            }
         }
 
     }
@@ -65,16 +68,25 @@ public:
         // #warning MULTIPLE TEST CASES WILL BE EXECUTED
         // std::cin >> T;
         while (T--) {
+#ifdef DEBUG
+            clock_t begin, end;
+            double time_spent;
+            begin = clock();
+#endif
             solve();
+#ifdef DEBUG
+            end = clock();
+            time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+            cout << "\nTime Taken :" <<  time_spent << nl << nl;
+#endif // DEBUG
         }
     }
+
 };
 
 
 int main() {
     ios::sync_with_stdio(0);
-    cin.tie(NULL);
-    cout.tie(NULL);
     solution()();
     return 0;
 }

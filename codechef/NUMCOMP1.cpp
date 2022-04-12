@@ -38,43 +38,72 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    int N;
+    int size = 1000'000'1;
+    vector<int> LCF = vector<int>(size);
+    vector<int> ans = vector<int>(size);
+    vector<bool> mp = vector<bool>(size);
 public:
     solution() {
-        /*some_precomputation*/
+        for(int64_t i { 2 }; i < size; ++i){
+            if(LCF[i] == 0){
+                LCF[i] = i;
+                for(int64_t j { i * i }; j < size; j += i){
+                    LCF[j] = i;
+                }
+            }
+        }
+
+        mp[2] = true;
+        queue<int> Q;
+        ans[2] = 1;
+        int group { 1 };
+        for(int i { 3 }; i < size; ++i){
+            if(mp[LCF[i]] != true){
+                if(i * 2 < size)    Q.push(i * 2);
+                group++;
+                mp[LCF[i]] = true;
+            }
+            if(Q.empty() != true and Q.front() == i){
+                group = group - 1;
+                Q.pop();
+            }
+            ans[i] = group;
+        }
     }
 
     void solve() {
-        cin >> D;
-        
+        cin >> N;
 
 //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
-        } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
-        }
+        cout << ans[N] << nl;
 
     }
 
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
+#ifdef DEBUG
+            clock_t begin, end;
+            double time_spent;
+            begin = clock();
+#endif
             solve();
+#ifdef DEBUG
+            end = clock();
+            time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+            cout << "\nTime Taken :" <<  time_spent << nl << nl;
+#endif // DEBUG
         }
     }
+
 };
 
 
 int main() {
     ios::sync_with_stdio(0);
-    cin.tie(NULL);
-    cout.tie(NULL);
     solution()();
     return 0;
 }

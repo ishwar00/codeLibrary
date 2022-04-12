@@ -38,32 +38,56 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    int N;
+    vector<int64_t> prefix_sum;
 public:
     solution() {
         /*some_precomputation*/
     }
 
+    int validate(int64_t const& A) {
+        int M = 1;
+        for (int i = 1; i <= N and M < (prefix_sum[N] / A); ++i) {
+            if (prefix_sum[i] == A * M) {
+                M = M + 1;
+            }
+        }
+        if (M != prefix_sum[N] / A) {
+            M = 1;
+        }
+        return N - M;
+    }
+    
     void solve() {
-        cin >> D;
-        
+        my::vector<int> A;
+        cin >> N;
+        A.push_input(N);
 
 //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
-        } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
+        prefix_sum = vector<int64_t>(N + 1);
+        int zero_count = 0;
+        for (int i = 1; i <= N; ++i) {
+            prefix_sum[i] = prefix_sum[i - 1] + A[i - 1];
+            zero_count += (not prefix_sum[i]);
         }
 
+        int sign = prefix_sum[N] < 0 ? -1 : 1;
+        int64_t const& S = abs(prefix_sum[N]);
+        int min_ops = (S != 0 ? N - 1: N - zero_count);
+        for (int64_t i = 1; i * i <= S; ++i) {
+            if (S % i == 0) {
+                min_ops = min(min_ops,
+                    min(validate(i * sign), validate((S / i) * sign))
+                );
+            }
+        }
+        cout << min_ops << endl;
     }
 
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
             solve();
         }
@@ -78,3 +102,5 @@ int main() {
     solution()();
     return 0;
 }
+
+

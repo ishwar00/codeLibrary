@@ -38,32 +38,83 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    int N;
 public:
     solution() {
         /*some_precomputation*/
     }
 
     void solve() {
-        cin >> D;
-        
+        my::vector<int> A;
+        cin >> N;
+        A.push_input(N);
 
 //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
-        } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
+        vector<int> mask(33);
+        auto replace = [&](int const& destination, int const& source) -> void {
+            for (int i = 0; i < 32; ++i) {
+                if (mask[i] == destination) mask[i] = source;
+            }
+        };
+
+        auto match_any_group = [&](int const& e) -> int {
+            for (int i = 0; i < 32; ++i) {
+                if (e & (1LL << i) and mask[i] != 0) {
+                    return mask[i];
+                }
+            }
+            return 0;
+        };
+
+        for (auto const& a : A) {
+            int group = match_any_group(a);
+            if (group == 0) group = ++mask.back();
+            for (int i = 0; i < 32; ++i) {
+                if (a & (1LL << i)) {
+                    if (mask[i] == 0) {
+                        mask[i] = group;
+                    } else if(mask[i] != group){
+                        replace(mask[i], group);
+                    }
+                }
+            }
         }
 
+        auto connected = [&](int const& a, int const& b) -> bool {
+            int g0 = match_any_group(a);
+            int g1 = match_any_group(b);
+            return g0 == g1;
+        };
+
+        auto grouped = [&]() -> void {
+            for (int const& a : A) {
+                int group = match_any_group(a);
+                for (int i = 0; i < 32; ++i) {
+                    if (a & (1LL << i)) {
+                        if (group != mask[i]) {
+                            replace(mask[i], group);
+                        }
+                    }
+                }
+            }
+        };
+        grouped();
+        dbg(mask);
+        vector<int> sorted = A;
+        sort(sorted.begin(), sorted.end());
+        for (int i = 0; i < N; ++i) {
+            if ((sorted[i] == 0 and A[i] != 0) or (A[i] != sorted[i] and not connected(A[i], sorted[i]))) {
+                cout << "NO" << nl;
+                return;
+            }
+        }
+        cout << "YES" << nl;
     }
 
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
             solve();
         }

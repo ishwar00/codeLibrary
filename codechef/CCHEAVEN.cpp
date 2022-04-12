@@ -1,12 +1,12 @@
 # include <bits/stdc++.h>
 using namespace std;
 namespace my {
-    template < typename T > class vector : public std::vector<T> {    public:    
-        vector()                            { }    
-        vector(int n)                       {    this->reserve(n); }
-        vector(std::initializer_list<T> ls) {    for (auto i : ls)	this->push_back(i); }
-        void push_input(size_t n)           {    for (size_t i { 0ULL }; i != n; ++i) {    T store;	cin >> store;    this->push_back(store);    }}
-    };
+	template < typename T > class vector : public std::vector<T> {    public:    
+		vector()                            { }    
+		vector(int n)                       {    this->reserve(n); }
+		vector(std::initializer_list<T> ls) {    for (auto i : ls)	this->push_back(i); }
+		void push_input(size_t n)           {    for (size_t i { 0ULL }; i != n; ++i) {    T store;	cin >> store;    this->push_back(store);    }}
+	};
 }
 
 int recur_depth = 0;
@@ -17,11 +17,10 @@ int recur_depth = 0;
 #endif
 template<typename Ostream, typename Cont>
 typename enable_if<is_same<Ostream, ostream>::value, Ostream&>::type operator<<(Ostream& os, const Cont& v) {
-    os << "[";
-    for (auto& x : v) { os << x << ", "; }
-    return os << "]";
+	os << "[";
+	for (auto& x : v) { os << x << ", "; }
+	return os << "]";
 }
-template<typename T1, typename T2>           std::istream& operator>> (std::istream& in, pair<T1, T2>& P)      {    in >> P.first >> P.second;  return in;  }
 template<typename Ostream, typename ...Ts>   Ostream&      operator<<(Ostream& os, const pair<Ts...>& p)       {    return os << "{" << p.first << ", " << p.second << "}";                }
 template < typename T >                      inline bool   compare_float(T a, T b)                             {    return (abs(a - b) < 1e-9) ? true : false;                                   }
 template < typename T >                      istream&      operator>>(istream& os, vector<T>& v)               {    T store;    os >> store;    v.push_back(store);    return os;                }
@@ -37,44 +36,56 @@ const std::string  nl  { "\n" };
 
 
 class solution {
-    int T = 1;
-    int D;
+	int T = 1;
+	int L;
 public:
-    solution() {
-        /*some_precomputation*/
-    }
+	solution() {
+		/*some_precomputation*/
+	}
 
-    void solve() {
-        cin >> D;
-        
+	void solve() {
+		string s;
+		cin >> L >> s;
 
 //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
-        } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
-        }
+		int one { 0 };
+		int zero { 0 };
+		for (auto i : s) {
+			if (i == '0') zero++;
+			if (i == '1') one++;
+			if (one >= zero) {
+				cout << "YES" << nl;
+				return;
+			}
+		}
+		cout << "NO" << nl;
 
-    }
+	}
 
-    void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
-        while (T--) {
-            solve();
-        }
-    }
+	void operator()() {
+		#warning MULTIPLE TEST CASES WILL BE EXECUTED
+		std::cin >> T;
+		while (T--) {
+#ifdef DEBUG
+			clock_t begin, end;
+			double time_spent;
+			begin = clock();
+#endif
+			solve();
+#ifdef DEBUG
+			end = clock();
+			time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+			cout << "\nTime Taken :" <<  time_spent << nl << nl;
+#endif // DEBUG
+		}
+	}
+
 };
 
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(NULL);
-    cout.tie(NULL);
-    solution()();
-    return 0;
+	ios::sync_with_stdio(0);
+	solution()();
+	return 0;
 }

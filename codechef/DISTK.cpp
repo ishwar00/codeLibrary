@@ -38,32 +38,47 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    int64_t N;
+    int64_t K;
 public:
     solution() {
         /*some_precomputation*/
     }
 
+    int find_x() {
+        int x = 0;
+        for(int64_t i = 1; i <= N; ++i){
+            int64_t store { i * (i + 1) / 2 };
+            if (store > K) {
+                return x;
+            }
+            x = i;
+        }
+        return x;
+    }
+
     void solve() {
-        cin >> D;
-        
+        cin >> N >> K;
 
 //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
-        } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
+        K = K - N;
+        int64_t x = find_x();
+        K = K - x * (x + 1) / 2;
+        dbg(K);
+        for (int i = 0; i < N; ++i) {
+            if (i <= x) {
+                cout << i + 1 << sp;
+            } else {
+                cout << x - K + 1 << sp;
+            }
         }
-
+        cout << nl;
     }
 
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
             solve();
         }

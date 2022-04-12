@@ -38,32 +38,34 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    int64_t N;
+    int64_t X;
 public:
     solution() {
         /*some_precomputation*/
     }
 
     void solve() {
-        cin >> D;
-        
+        cin >> N >> X;
 
 //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
-        } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
+        for (int64_t pi = 1; pi <= N; ++pi) {
+            if (X % pi == 0) {
+                int64_t max_length = N - (pi - 1LL);
+                int64_t required_length = X / pi;
+                if (required_length <= max_length) {
+                    cout << "YES" << endl;
+                    return;
+                }
+            }
         }
-
+        cout << "NO" << endl;
     }
 
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
             solve();
         }

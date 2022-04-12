@@ -38,43 +38,77 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    int N;
+    int K;
 public:
     solution() {
         /*some_precomputation*/
     }
 
     void solve() {
-        cin >> D;
-        
+        string S;
+        cin >> N >> K >> S;
+        my::vector<int> Q;
+        Q.push_input(K);
 
 //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
-        } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
+        int distance  { 0 };
+        for(int i { 0 }; i < N - 1; ++i){
+            if(S[i] != S[i+1]){
+                distance += 1;
+            }else{
+                distance += 2;
+            }
+        }
+        auto flip = [&](int at){
+            if(S[at] != '0') {
+                S[at] = '0';
+            }else{
+                S[at] = '1';
+            }
+        };
+        for(auto& i : Q){
+            if(i - 2 >= 0 and S[i-1] != S[i-2]){
+                distance++;
+            }else if(i - 2 >= 0){
+                distance = distance - 1;
+            }
+
+            if(i < N and S[i - 1] != S[i]){
+                distance++;
+            }else if(i < N){
+                distance = distance - 1;
+            }
+            flip(i - 1);
+            cout << distance << nl;
         }
 
     }
 
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
+#ifdef DEBUG
+            clock_t begin, end;
+            double time_spent;
+            begin = clock();
+#endif
             solve();
+#ifdef DEBUG
+            end = clock();
+            time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+            cout << "\nTime Taken :" <<  time_spent << nl << nl;
+#endif // DEBUG
         }
     }
+
 };
 
 
 int main() {
     ios::sync_with_stdio(0);
-    cin.tie(NULL);
-    cout.tie(NULL);
     solution()();
     return 0;
 }

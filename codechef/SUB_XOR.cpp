@@ -38,32 +38,46 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    int N;
+    const int64_t MOD = 998'244'353LL;
 public:
     solution() {
         /*some_precomputation*/
     }
 
     void solve() {
-        cin >> D;
-        
+        string S;
+        cin >> N >> S;
 
-//# </DON'T PANIC RELAX>
+        //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
-        } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
+        vector<int> buffer(N);
+        for (int i = 1; i <= N; ++i) {
+            if (S[i - 1] == '1') {
+                buffer[i - 1] = (i & 1);
+            }
         }
+        vector<int> prefix_sum(N);
+        prefix_sum.front() = buffer.front();
+        for (int i = 1; i < N; ++i) {
+            prefix_sum[i] = prefix_sum[i - 1] + buffer[i];
+        }
+        int64_t bit = 1;
+        int64_t ans = 0;
+        for (int i = N - 1, j = 0; i >= 0; ++j, i = i - 1) {
+            if (prefix_sum[i] & 1) {
+                ans = (ans + bit) % MOD;
+            }
+            bit = (bit << 1) % MOD;
+        }
+
+        cout << ans << endl;
 
     }
 
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
             solve();
         }

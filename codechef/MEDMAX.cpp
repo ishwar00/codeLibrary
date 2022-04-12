@@ -38,43 +38,89 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    int N;
+    int64_t K;
+    my::vector<int> a;
 public:
     solution() {
         /*some_precomputation*/
     }
+    
+
+    int cost(int x) {
+        int64_t Cost { 0 };
+        int i = lower_bound(a.begin(), a.end(), x) - a.begin();
+        assert(i != N * N + 1);
+        int L { i - 1 };
+        int selected_m { 0 };
+        int min_left { N / 2 };
+        int min_M { INT32_MAX };
+
+        for (; i <= N * N and selected_m < N; ++i) {
+            if (L >= min_left) {
+                min_M = min(min_M, a[i]);
+                Cost += a[i];
+                L = L - min_left;
+                selected_m = selected_m + 1;
+            } else {
+                L = L + 1;
+            }
+        }
+
+        if (Cost <= K and selected_m == N and L == 0) {
+            assert(min_M != INT32_MAX);
+            return min_M;
+        } else {
+            return -1;
+        }
+    }
 
     void solve() {
-        cin >> D;
-        
+        a = my::vector<int> { 0 };
+        cin >> N >> K;
+        a.push_input(N * N);
 
 //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
-        } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
-        }
+        sort(a.begin(), a.end());
 
+        int64_t ans { -1 };
+        for (int i { 1 }, j { N * N }; i <= j;) {
+            int center { (i + j) / 2 };
+            int goodness { cost(a[center]) };
+            if (goodness != -1) {
+                ans = goodness;
+                i = center + 1;
+            } else {
+                j = center - 1;
+            }
+        }
+        cout << ans << nl;
     }
 
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
+#ifdef DEBUG
+            clock_t begin, end;
+            double time_spent;
+            begin = clock();
+#endif
             solve();
+#ifdef DEBUG
+            end = clock();
+            time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+            cout << "\nTime Taken :" <<  time_spent << nl << nl;
+#endif // DEBUG
         }
     }
+
 };
 
 
 int main() {
     ios::sync_with_stdio(0);
-    cin.tie(NULL);
-    cout.tie(NULL);
     solution()();
     return 0;
 }

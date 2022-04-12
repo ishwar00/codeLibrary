@@ -38,43 +38,65 @@ const std::string  nl  { "\n" };
 
 class solution {
     int T = 1;
-    int D;
+    int N;
 public:
     solution() {
         /*some_precomputation*/
     }
 
     void solve() {
-        cin >> D;
-        
+        cin >> N;
+        my::vector<int> A;
+        my::vector<int> B;
+        A.push_input(N);
+        B.push_input(N);
 
 //# </DON'T PANIC RELAX>
 
-        if (D & 1) {
-            cout << -1 << endl;
-        } else {
-            cout << D / 2 << sp << 0 << nl;
-            cout << -D / 2 << sp << 0 << nl;
-            cout << 0 << sp << D / 2 << nl;
-            cout << 0 << sp << -D / 2 << nl;
+        int min_value { INT32_MAX };
+        for (int i { 0 }; i < N; ++i) {
+            int store { (A.front() + B[i]) % N };
+            min_value = min(min_value, store);
         }
 
+        set<vector<int>> S;
+
+        for (int i { 0 }; i < N; ++i) {
+            int store { (A.front() + B[i]) % N };
+            if (min_value == store) {
+                vector<int> v;
+                for (int k { 0 }, j { i }; k < N; ++k, ++j) {
+                    v.push_back((A[k] + B[j % N]) % N);
+                }
+                S.insert(v);
+            }
+        }
+        print(*S.begin());
     }
 
     void operator()() {
-        // #warning MULTIPLE TEST CASES WILL BE EXECUTED
-        // std::cin >> T;
+        #warning MULTIPLE TEST CASES WILL BE EXECUTED
+        std::cin >> T;
         while (T--) {
+#ifdef DEBUG
+            clock_t begin, end;
+            double time_spent;
+            begin = clock();
+#endif
             solve();
+#ifdef DEBUG
+            end = clock();
+            time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+            cout << "\nTime Taken :" <<  time_spent << nl << nl;
+#endif // DEBUG
         }
     }
+
 };
 
 
 int main() {
     ios::sync_with_stdio(0);
-    cin.tie(NULL);
-    cout.tie(NULL);
     solution()();
     return 0;
 }

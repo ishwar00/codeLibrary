@@ -1,15 +1,8 @@
-/*
- *
- *  problem link: https://www.codechef.com/LTIME105B/problems/PLPROCESS
- *
- * */
-
-
 # include <bits/stdc++.h>
 using namespace std;
 namespace my {
-    template < typename T > class vector : public std::vector<T> {    public:
-        vector()                            { }
+    template < typename T > class vector : public std::vector<T> {    public:    
+        vector()                            { }    
         vector(int n)                       {    this->reserve(n); }
         vector(std::initializer_list<T> ls) {    for (auto i : ls)	this->push_back(i); }
         void push_input(size_t n)           {    for (size_t i { 0ULL }; i != n; ++i) {    T store;	cin >> store;    this->push_back(store);    }}
@@ -38,7 +31,7 @@ const std::string  sp  { " " };
 const std::string  nl  { "\n" };
 #define sec second
 #define fir first
-/*******************************************************</Utilities>********************************************************/
+/*******************************************************</Utilities>********************************************************/         
 
 
 
